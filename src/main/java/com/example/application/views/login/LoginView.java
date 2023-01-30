@@ -12,6 +12,9 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
+import com.vaadin.flow.server.VaadinSession;
+
+import static com.example.application.util.Constants.CONSTANT_SESSION_USERNAME;
 
 @Route(value = "login")
 @PageTitle("Login")
@@ -29,6 +32,11 @@ public class LoginView extends Div {
                 new Button("Login", event -> {
                     try {
                         authService.authenticate(username.getValue(), password.getValue());
+                        VaadinSession
+                                .getCurrent()
+                                .getSession()
+                                .setAttribute(CONSTANT_SESSION_USERNAME, username.getValue());
+
                         UI.getCurrent().navigate("home");
                     } catch (AuthService.AuthException e) {
                         Notification.show("Wrong credentials.");
